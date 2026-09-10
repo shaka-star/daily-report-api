@@ -6,7 +6,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/reports")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173","https://daily-report-frontend-ecru.vercel.app/"})
 public class ReportController {
 
     private final ReportService reportService;
