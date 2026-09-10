@@ -1,61 +1,43 @@
 package com.example.daily_report_api;
 
-
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
+import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/reports")
 @CrossOrigin(origins = "http://localhost:5173")
 public class ReportController {
-    private final ReportRepository reportRepository;
 
-    // ReportRepository　を　DI(依存性注入)
-    public ReportController(ReportRepository reportRepository) {
-        this.reportRepository = reportRepository;
+    private final ReportService reportService;
+
+    public ReportController(ReportService reportService) {
+        this.reportService = reportService;
     }
 
-    // 日報一覧取得AP（GET/api/v1/reports)
+    // 一覧取得
     @GetMapping
     public List<Report> getAllReports() {
-        return reportRepository.findAll();
+        return reportService.getAllReports();
     }
 
-    // 日報新規登録API（POST/api/v1/reports）
+    // 新規登録
     @PostMapping
     public Report createReport(@RequestBody Report report) {
-        return reportRepository.save(report);
-    }
-    // 指定IDの日報詳細取得API（GET/api/v1/reports/{id})
-    @GetMapping("/{id}")
-    public Report getReportById(@PathVariable Long id) {
-        return reportRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"指定されたIDの日報が見つかりません。" + id));
+        return reportService.createReport(report);
     }
 
-    // 指定IDの日報更新API（PUT/api/v1\reports/{id})
+    // 更新
     @PutMapping("/{id}")
-    public Report updateReport(@PathVariable Long id,@RequestBody Report updatedReport) {
-        return reportRepository.findById(id)
-                .map(existingReport -> {
-                    existingReport.setWorkDate(updatedReport.getWorkDate());
-                    existingReport.setWorkHours(updatedReport.getWorkHours());
-                    existingReport.setContent(updatedReport.getContent());
-                    existingReport.setImpressions(updatedReport.getImpressions());
-                    return reportRepository.save(existingReport);
-                })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"指定されたIDの日報が見つかりません。" + id));
+    public ResponseEntity<Report> updateReport(@PathVariable Long id, @RequestBody Report report) {
+        Report updated = reportService.updateReport(id, report);
+        return ResponseEntity.ok(updated);
     }
-    // 指定IDの日報削除API（DELETE/api/v1/reports/{id})
+
+    // 削除
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteReport(@PathVariable Long id) {
-        if(!reportRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"指定されたIDの日報が見つかりません。" + id);
-        }
-        reportRepository.deleteById(id);
+    public ResponseEntity<Void> deleteReport(@PathVariable Long id) {
+        reportService.deleteReport(id);
+        return ResponseEntity.noContent().build();
     }
 }

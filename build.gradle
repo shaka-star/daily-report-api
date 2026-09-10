@@ -21,6 +21,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
+	// PostgreSQL ドライバーの追加（本番環境用）
+	runtimeOnly 'org.postgresql:postgresql'
+
 	// Spring Boot が最適な H2 バージョンを自動選択します
 	implementation 'com.h2database:h2'
 

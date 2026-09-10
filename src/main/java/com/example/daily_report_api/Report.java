@@ -28,6 +28,16 @@ public class Report {
     @Column(columnDefinition = "TEXT")
     private String impressions;  // 所感
 
+    private String userName;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     //---コンストラクタ---
     public Report() {
     }
