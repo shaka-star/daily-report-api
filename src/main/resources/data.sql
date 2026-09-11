@@ -1,9 +1,11 @@
 -- 初期ユーザーデータの投入 --
 INSERT INTO users (email, password, name, role)
 VALUES ('asakura@example.com','0000','朝倉シン','USER');
+ON CONFLICT (email) DO NOTHING;
 
 INSERT INTO users (email, password, name, role)
 VALUES ('sakamoto@example.com','1111','坂本太郎','ADMIN');
+ON CONFLICT (email) DO NOTHING;
 
 -- テスト用日報データの投入
 INSERT INTO report (work_date, work_hours, content, impressions)
